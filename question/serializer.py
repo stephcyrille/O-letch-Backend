@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from userProfile.models import UserProfile
-from .models import Question
+from .models import Question, Answer
 
 
 
@@ -48,3 +48,22 @@ class QuestionSerializer(serializers.ModelSerializer):
 		author = ProfileSerializer.create(ProfileSerializer(), validated_data=author_data)
 		question, created = Question.objects.update_or_create(author=author, title=validated_data.pop('title'), content=validated_data.pop('content'), vote=validated_data.pop('vote'), toggle=validated_data.pop('toggle'), created_at=validated_data.pop('created_at'), update_at=validated_data.pop('update_at'))
 		return question
+
+
+class AnswerSerializer(serializers.ModelSerializer):
+	author = ProfileSerializer(required=True)
+
+	class Meta:
+		model = Answer
+		fields = ('id', 'content', 'vote', 'author', 'created_at')
+
+	def create(self, validated_data):
+		"""
+		Overriding the default create method of the model Answer serializer
+		:param validated_data: data containing all the details of things
+		:return: return a successfully created things record
+		"""
+		author_data = validated_data.pop('author')
+		author = ProfileSerializer.create(ProfileSerializer(), validated_data=author_data)
+		answer, created = Answer.objects.update_or_create(author=author, id=validated_data.pop('id'), content=validated_data.pop('content'), vote=validated_data.pop('vote'), created_at=validated_data.pop('created_at'))
+		return answer

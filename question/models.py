@@ -19,3 +19,21 @@ class Question(models.Model):
 	def __str__(self):
 		return self.title
 
+
+
+
+class Answer(models.Model):
+	author = models.ForeignKey(UserProfile)
+	question = models.ForeignKey(Question)
+	content = models.TextField()
+	vote = models.IntegerField(default=0)
+	created_at = models.DateTimeField(auto_now_add=True)
+	update_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta:
+		ordering = ['-id']
+		verbose_name_plural = 'Answers'
+
+	def __str__(self):
+		return self.content
+
