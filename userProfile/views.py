@@ -1,17 +1,18 @@
 from .models import UserProfile
 from django.http import Http404
-from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
 
 from .serializer import ProfileSerializer
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 
 
 
 class ProfileList(APIView):
-    """ 
+    """
         Creation of the class in wich we would perform
         all the API actions (GET, POST, DELETE)
     """
@@ -29,16 +30,17 @@ class ProfileList(APIView):
 
 
 class ProfileDetail(APIView):
-	def get_object(self, pk):
-		try:
-			return UserProfile.objects.get(pk=pk)
-		except UserProfile.DoesNotExist:
-			raise  Http404
+    permission_classes = (AllowAny,)
 
+    def get_object(self, username):
+        name = str(username)
+        try:
+            return User.objects.get(username=name)
+        except User.DoesNotExist:
+            raise  Http404
 
-	def get(self, request, pk, pk_p, format=None):
-		user = self.get_object(pk)
-		profile = UserProfile.objects.filter(user_id=user.pk)
-		result = get_object_or_404(profile, pk=pk_p)
-		serializer = ProfileSerializer(result)
-		return Response(serializer.data)
+    def get(self, request, username, format=None):
+        user = self.get_object(username)
+        profile = UserProfile.objects.get(user_id=user.pk)
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data)

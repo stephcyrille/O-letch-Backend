@@ -1,26 +1,28 @@
 from .models import Question, Answer
-from userProfile.models import UserProfile 
+from userProfile.models import UserProfile
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 
-from .serializer import QuestionSerializer, AnswerSerializer, ProfileSerializer
+from .serializer import QuestionSerializer, AnswerSerializer
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 
 
 
 class QuestionList(APIView):
-    """ 
+    """
         Creation of the class in wich we would perform
         all the API actions (GET, POST, DELETE)
-    """    
+    """
+    permission_classes = (AllowAny,)
     def get(self, request, format=None):
         questions = Question.objects.all()
         serializer = QuestionSerializer(questions, many=True)
         return Response(serializer.data)
-    
+
     def post(self, request, format=None):
         serializer = QuestionSerializer(data=request.data)
         if serializer.is_valid():
@@ -35,10 +37,11 @@ class QuestionList(APIView):
 
 
 class AnswerList(APIView):
-    """ 
+    """
         Creation of the class in wich we would perform
         all the API actions (GET, POST, DELETE)
-    """    
+    """
+    permission_classes = (AllowAny,)
     def get_object(self, pk):
         try:
             return Question.objects.get(pk=pk)
@@ -50,7 +53,7 @@ class AnswerList(APIView):
         answers = Answer.objects.filter(question=question.pk)
         serializer = AnswerSerializer(answers, many=True)
         return Response(serializer.data)
-    
+
     """def post(self, request, format=None):
         serializer = QuestionSerializer(data=request.data)
         if serializer.is_valid():
@@ -64,7 +67,7 @@ class AnswerList(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
     """
 
- 
+
 class AnswerDetail(APIView):
     def get_u_object(self, pk_u):
         try:

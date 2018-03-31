@@ -3,5 +3,5 @@ from .views import ArticleList
 
 
 urlpatterns = [
-	url(r'^news/$', ArticleList.as_view()),
+	url(r'^articles/$', ArticleList.as_view()),
 ]
