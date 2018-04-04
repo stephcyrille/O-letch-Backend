@@ -3,7 +3,7 @@ from userProfile.models import UserProfile
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 
-from .serializer import QuestionSerializer, AnswerSerializer
+from .serializer import QuestionSerializer, QuestionPostSerializer, AnswerSerializer, AnswerPostSerializer
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -24,7 +24,7 @@ class QuestionList(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = QuestionSerializer(data=request.data)
+        serializer = QuestionPostSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -34,6 +34,15 @@ class QuestionList(APIView):
         question = self.get_object(pk)
         question.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class QuestionDetail(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request, pk, format=None):
+        question = get_object_or_404(Question, pk=pk)
+        serializer = QuestionSerializer(question)
+        return Response(serializer.data)
 
 
 class AnswerList(APIView):
@@ -54,21 +63,29 @@ class AnswerList(APIView):
         serializer = AnswerSerializer(answers, many=True)
         return Response(serializer.data)
 
-    """def post(self, request, format=None):
-        serializer = QuestionSerializer(data=request.data)
+
+class AnswerListPosting(APIView):
+    """
+        Creation of the class in wich we would perform
+        all the API actions (GET, POST, DELETE)
+    """
+    permission_classes = (AllowAny,)
+
+    def post(self, request, format=None):
+        serializer = AnswerPostSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
-        question = self.get_object(pk)
-        question.delete()
+        answer = get_object_or_404(Answer, pk=pk)
+        answer.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    """
 
 
 class AnswerDetail(APIView):
+    permission_classes = (AllowAny,)
     def get_u_object(self, pk_u):
         try:
             return UserProfile.objects.get(pk=pk_u)

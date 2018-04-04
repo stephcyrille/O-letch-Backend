@@ -1,6 +1,7 @@
 from .models import UserProfile
 from django.http import Http404
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 
 from .serializer import ProfileSerializer
 
@@ -42,5 +43,14 @@ class ProfileDetail(APIView):
     def get(self, request, username, format=None):
         user = self.get_object(username)
         profile = UserProfile.objects.get(user_id=user.pk)
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data)
+
+
+class ProfileDetailById(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request, pk, format=None):
+        profile = get_object_or_404(UserProfile, pk=pk)
         serializer = ProfileSerializer(profile)
         return Response(serializer.data)

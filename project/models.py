@@ -3,31 +3,13 @@ from userProfile.models import UserProfile
 
 
 
-
-CHOICE_ZA = (
-				("Z1", "Soudano sahélienne (Nord et Extrême Nord)"),
-				("Z2", "Hautes savanes guinéennes (Adamaoua, département du mbam)"),
-				("Z3", "Hauts plateaux de l’ouest (Ouest et Nord-Ouest)"),
-				("Z4", "Forets humides a pluviométries monomodale (Littoral et Sud-Ouest)"),
-				("Z5", "Foret humide a pluviométrie bimodale (Centre, Sud, Est)"),
-			   )
-
-CHOICE_PRODUCT = (
-				("ARACHIDE", "Arachide"),
-				("CACAO", "Cacao"),
-				("MAIS", "Maïs"),
-				("MANIOC", "Manioc"),
-				("PLANTAIN", "Plantain"),
-			   )
-
-
 class ProjectStarter(models.Model):
 	author = models.ForeignKey(UserProfile)
-	basic = models.BooleanField(default=False)
-	avdanced = models.BooleanField(default=False)
-	professional = models.BooleanField(default=False)
-	zone = models.CharField(max_length=200, choices=CHOICE_ZA)
-	product = models.CharField(max_length=50, choices=CHOICE_PRODUCT)
+	#basic = models.BooleanField(default=False)
+	#avdanced = models.BooleanField(default=False)
+	#professional = models.BooleanField(default=False)
+	zone = models.CharField(max_length=200)
+	product = models.CharField(max_length=50)
 	surface = models.IntegerField(default=0)
 	created_at = models.DateTimeField(auto_now_add=True)
 	update_at = models.DateTimeField(auto_now_add=True)
@@ -41,7 +23,7 @@ class ProjectStarter(models.Model):
 
 class Project(models.Model):
 	author = models.ForeignKey(UserProfile)
-	projectType = models.CharField(max_length=50), 				# Typt de projet: basic, avance ou pro
+	projectType = models.CharField(max_length=50, default="basic")				# Typt de projet: basic, avance ou pro
 	zone = models.CharField(max_length=50)
 	product = models.CharField(max_length=50)
 	surface = models.IntegerField(default=0)
@@ -63,4 +45,4 @@ class Project(models.Model):
 		verbose_name_plural = 'Projects'
 
 	def __str__(self):
-		return self.author.user.first_name + ' ' + self.author.user.last_name + ' ' + self.projectType
+		return self.author.user.first_name + ' ' + self.author.user.last_name

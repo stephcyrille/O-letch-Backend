@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^api/', include('news.urls')),
     url(r'^api/', include('question.urls')),
     url(r'^api/', include('userProfile.urls')),
-    # url(r'^api/', include('project.urls')),
+    url(r'^api/', include('project.urls')),
     url(r'^api/auth/login', obtain_jwt_token),
     url(r'^api/auth/refresh', refresh_jwt_token),
     url(r'^api/auth/verify', verify_jwt_token),

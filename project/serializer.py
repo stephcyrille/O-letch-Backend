@@ -21,19 +21,20 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class ProjectStarterSerializer(serializers.ModelSerializer):
-	author = ProfileSerializer(required=True)
 
 	class Meta:
 		model = ProjectStarter
-		fields = ('author', 'zone', 'product', 'surface', 'basic', 'advanced', 'professional')
+		fields = ('author', 'zone', 'product', 'surface', 'update_at', 'created_at')
 
-	def create(self, validated_data):
-		"""
-		Overriding the default create method of the model Profile serializer
-		:param validated_data: data containing all the details of author
-		:return: return a successfully created author record
-		"""
-		author_data = validated_data.pop('author')
-		author = ProfileSerializer.create(ProfileSerializer(), validated_data=author_data)
-		projectStarter, created = ProjectStarter.objects.update_or_create(author=author, basic=validated_data.pop('basic'), advanced=validated_data.pop('advanced'), professional=validated_data.pop('professional'), zone=validated_data.pop('zone'), product=validated_data.pop('product'), surface=validated_data.pop('surface'))
-		return projectStarter
+
+class ProjectSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Project
+        fields = ('author', 'projectType', 'zone', 'product', 'surface', 'treeNursery', 'treeNumberByHectare', 'semDensity', 'fertilizerProportion', 'phytoThreatment', 'productPrice', 'semDate', 'cropDate', 'cropTotalProduct', 'active', 'update_at', 'created_at')
+
+
+
+
+# basic=validated_data.pop('basic'), advanced=validated_data.pop('advanced'), professional=validated_data.pop('professional'),
+# , 'basic', 'advanced', 'professional'
