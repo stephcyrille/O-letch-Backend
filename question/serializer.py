@@ -24,7 +24,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ('user', 'age', 'profession', 'phone', 'country', 'city', 'avatar', 'created_at', 'update_at')
+        fields = ('id', 'user', 'age', 'profession', 'phone', 'country', 'city', 'created_at', 'update_at')
 
     def create(self, validated_data):
         """
@@ -48,7 +48,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         instance.phone = validated_data['phone']
         instance.country = validated_data['country']
         instance.city = validated_data['city']
-        instance.avatar = validated_data['avatar']
         instance.created_at = validated_data['created_at']
         instance.update_at = validated_data['update_at']
         return instance

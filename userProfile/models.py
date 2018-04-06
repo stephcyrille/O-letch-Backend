@@ -15,19 +15,30 @@ def user_image(instance, filename):
 
 class UserProfile(models.Model):
 	user = models.ForeignKey(User, null=False)
-	age = models.IntegerField()
+	age = models.IntegerField(null=True, blank=True)
 	phone = models.CharField(max_length=9)
 	profession = models.CharField(max_length=50)
 	country = models.CharField(max_length=50)
 	city = models.CharField(max_length=50)
 	created_at = models.DateTimeField(auto_now_add=True)
 	update_at = models.DateTimeField(auto_now_add=True)
-	avatar = models.ImageField(upload_to=user_image, verbose_name='UserImage', blank=True)
 
 	class Meta:
 		ordering = ['-id']
-		verbose_name_plural = 'UserProfiles'
+		verbose_name_plural = 'Users Profiles'
 
 	def __str__(self):
-		return self.user.first_name + ' ' + self.user.last_name
+		return self.user.username + ', ' + self.city
+
+
+class UserAvatar(models.Model):
+	user = models.ForeignKey(UserProfile, null=False)
+	avatar = models.ImageField(upload_to=user_image, verbose_name='avatar', blank=True)
+
+	class Meta:
+		ordering = ['-id']
+		verbose_name_plural = 'Avatars User'
+
+	def __str__(self):
+		return self.user.user.username
 
